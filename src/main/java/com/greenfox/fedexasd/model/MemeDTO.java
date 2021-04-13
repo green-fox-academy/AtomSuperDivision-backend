@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,4 +20,17 @@ public class MemeDTO {
   private Long scary = 0L;
   private Timestamp createdAt;
   private String username;
+  private List<CommentSuccessResponseDTO> comments;
+
+  public MemeDTO(String caption, String url, Long funny, Long sad, Long erotic, Long scary, Timestamp createdAt,
+                 String username) {
+    this.caption = caption;
+    this.url = url;
+    this.funny = funny;
+    this.sad = sad;
+    this.erotic = erotic;
+    this.scary = scary;
+    this.createdAt = createdAt;
+    this.username = username;
+  }
 }

@@ -9,11 +9,11 @@
 |DATASOURCE_PASSWORD |{your local mysql password}   |
 |HIBERNATE_DIALECT   |{necessary hibernate dialect} |
 |TEST_DATASOURCE_URL |{your test database name}     |
-|LOGGING_LEVEL       |{?}                           |
-|CLIENT_ID           |{?}                           |
+|LOGGING_LEVEL       |{INFO}                           |
+|CLIENT_ID           |{2fd7d5d7a947e005e3c1}                           |
 |REDIRECT_URI        |{url to redirect}             |        
-|CLIENT SECRET       |{?}                           |
-|JWT_SECRET_KEY      |{add a 64bit seccret key}     |
+|CLIENT SECRET       |{2377b2ae601e5840835a3cad54e7233f05fe2a66}                           |
+|JWT_SECRET_KEY      |{add a 64bit secret key}     |
 
 ##GET /memes
 > - Header: X-meme-token 
