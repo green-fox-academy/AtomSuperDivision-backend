@@ -4,8 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ManyToAny;
+import org.hibernate.annotations.Type;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,42 +15,33 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
-@Table(name = "memes")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Meme {
+public class Comment {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private String caption;
-  private String url;
-  private Long funny = 0L;
-  private Long sad = 0L;
-  private Long erotic = 0L;
-  private Long scary = 0L;
+
+  @Type(type = "text")
+  private String message;
 
   @Column(name = "created_at")
-  private Long createdAt;
+  private Timestamp createdAt;
 
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne
+  @JoinColumn(name = "meme_id", nullable = false)
+  private Meme meme;
+
+  @ManyToOne
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
-  @OneToMany(mappedBy = "meme", cascade = CascadeType.ALL)
-  private List<Comment> commentList = new ArrayList<>();
 
-  public Meme(String caption, String url) {
-    Date date = new Date();
-    this.caption = caption;
-    this.url = url;
-    this.createdAt = date.getTime();
-  }
 }
