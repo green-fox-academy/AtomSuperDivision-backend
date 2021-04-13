@@ -1,5 +1,7 @@
 package com.greenfox.fedexasd.model;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +21,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
+@Table(name = "comments")
 @Getter
 @Setter
 @NoArgsConstructor

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Timestamp;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -37,7 +38,7 @@ public class Meme {
   private Long scary = 0L;
 
   @Column(name = "created_at")
-  private Long createdAt;
+  private Timestamp createdAt;
 
   @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "user_id", nullable = false)
@@ -48,8 +49,12 @@ public class Meme {
 
   public Meme(String caption, String url) {
     Date date = new Date();
+  }
+
+  public Meme(User user, String caption, String url) {
+    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
     this.caption = caption;
     this.url = url;
-    this.createdAt = date.getTime();
+    this.user = user;
   }
 }
