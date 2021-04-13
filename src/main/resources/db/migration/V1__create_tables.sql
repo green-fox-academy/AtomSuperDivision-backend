@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS memes;
 DROP TABLE IF EXISTS users;
 
@@ -20,11 +21,11 @@ CREATE TABLE memes
     sad        bigint,
     erotic     bigint,
     scary      bigint,
-    created_at bigint,
+    created_at timestamp,
     user_id    varchar(30),
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES users (username)
 );
 
 INSERT INTO memes (caption, url, funny, sad, erotic, scary, created_at, user_id)
-VALUES ('first', 'asd', 0, 0, 0, 0, 1, 'Bond');
+VALUES ('first', 'asd', 0, 0, 0, 0,'2020-01-01 10:10:10', 'Bond');
