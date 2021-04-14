@@ -14,15 +14,16 @@ import com.greenfox.fedexasd.model.MemeMinDTO;
 import com.greenfox.fedexasd.model.User;
 import com.greenfox.fedexasd.repository.CommentRepository;
 import com.greenfox.fedexasd.repository.MemeRepository;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class MemeService {
@@ -42,7 +43,7 @@ public class MemeService {
   public List<MemeDTO> getAllMemes() {
     List<Meme> memes = memeRepository.findAll();
     return memes.stream().map(
-        meme -> new MemeDTO(meme.getCaption(), meme.getUrl(), meme.getFunny(), meme.getSad(),
+        meme -> new MemeDTO(meme.getCaption(), meme.getImage(), meme.getFunny(), meme.getSad(),
             meme.getErotic(), meme.getScary(), meme.getCreatedAt(), meme.getUser().getUsername()))
         .collect(
             Collectors.toList());
@@ -55,18 +56,21 @@ public class MemeService {
         .stream()
         .map(m -> modelMapper.map(m, CommentSuccessResponseDTO.class))
         .collect(Collectors.toList());
-
-    return new MemeDTO(meme.getCaption(), meme.getUrl(), meme.getFunny(), meme.getSad(),
+    return new MemeDTO(meme.getCaption(), meme.getImage(), meme.getFunny(), meme.getSad(),
         meme.getErotic(), meme.getScary(), meme.getCreatedAt(), meme.getUser().getUsername(), comments);
   }
 
-  public Meme createMeme(CreateMemeRequestDTO createMemeRequestDTO, String username)
+  public Meme createMeme(CreateMemeRequestDTO createMemeRequestDTO, String username, MultipartFile file)
       throws UserDoesNotExistException {
     User user = userService.getUserByUsername(username);
     Meme meme = new Meme();
+    try {
+      meme.setImage(Base64.getEncoder().encodeToString(file.getBytes()));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     meme.setCaption(createMemeRequestDTO.getCaption());
     meme.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-    meme.setUrl(createMemeRequestDTO.getUrl());
     meme.setUser(user);
     return memeRepository.save(meme);
   }
@@ -111,7 +115,7 @@ public class MemeService {
         .collect(Collectors.toList());
 
     return orderByHitCount.stream()
-        .map(o -> new MemeMinDTO(o.getId(), o.getCaption(), o.getUrl(), o.getHitCount()))
+        .map(o -> new MemeMinDTO(o.getId(), o.getCaption(), o.getImage(), o.getHitCount()))
         .collect(Collectors.toList());
   }
 }

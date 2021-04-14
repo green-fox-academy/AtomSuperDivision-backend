@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class MemeDTO {
   private String caption;
-  private String url;
+  private String image;
   private Long funny = 0L;
   private Long sad = 0L;
   private Long erotic = 0L;
@@ -22,10 +22,10 @@ public class MemeDTO {
   private String username;
   private List<CommentSuccessResponseDTO> comments;
 
-  public MemeDTO(String caption, String url, Long funny, Long sad, Long erotic, Long scary, Timestamp createdAt,
+  public MemeDTO(String caption, String image, Long funny, Long sad, Long erotic, Long scary, Timestamp createdAt,
                  String username) {
     this.caption = caption;
-    this.url = url;
+    this.image = image;
     this.funny = funny;
     this.sad = sad;
     this.erotic = erotic;
