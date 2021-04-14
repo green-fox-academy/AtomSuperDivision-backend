@@ -45,7 +45,7 @@ public class MemeService {
   public List<MemeDTO> getAllMemes() {
     List<Meme> memes = memeRepository.findAll();
     return memes.stream().map(
-        meme -> new MemeDTO(meme.getCaption(), meme.getImage(), meme.getFunny(), meme.getSad(),
+        meme -> new MemeDTO(meme.getId(),meme.getCaption(), meme.getImage(), meme.getFunny(), meme.getSad(),
             meme.getErotic(), meme.getScary(), meme.getCreatedAt(), meme.getUser().getUsername()))
         .collect(
             Collectors.toList());
@@ -58,22 +58,12 @@ public class MemeService {
         .stream()
         .map(m -> modelMapper.map(m, CommentSuccessResponseDTO.class))
         .collect(Collectors.toList());
-    return new MemeDTO(meme.getCaption(), meme.getImage(), meme.getFunny(), meme.getSad(),
+    return new MemeDTO(meme.getId(),meme.getCaption(), meme.getImage(), meme.getFunny(), meme.getSad(),
         meme.getErotic(), meme.getScary(), meme.getCreatedAt(), meme.getUser().getUsername(), comments);
   }
 
   public Meme createMeme(CreateMemeRequestDTO createMemeRequestDTO, String username, MultipartFile file)
       throws UserDoesNotExistException, InvalidGenreException {
-//=======
-//
-//    return new MemeDTO(meme.getCaption(), meme.getUrl(), meme.getFunny(), meme.getSad(),
-//        meme.getErotic(), meme.getScary(), meme.getCreatedAt(), meme.getUser().getUsername(),
-//        comments);
-//  }
-//
-//  public Meme createMeme(CreateMemeRequestDTO createMemeRequestDTO, String username)
-//      throws UserDoesNotExistException, InvalidGenreException {
-//>>>>>>> 31a1c3e (in progress)
     User user = userService.getUserByUsername(username);
     validateGenre(createMemeRequestDTO.getGenre());
     Meme meme = new Meme();

@@ -10,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemeGenreDTO {
+  private Long id;
   private String caption;
   private String genre;
   private String url;

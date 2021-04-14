@@ -74,11 +74,11 @@ public class MemeController {
     Meme meme = memeService.addComment(id, commentRequestDTO);
 
     List<CommentSuccessResponseDTO> comments = meme.getCommentList().stream()
-        .map(c -> new CommentSuccessResponseDTO(c.getMessage(), c.getUser().getUsername(), c.getCreatedAt()))
+        .map(c -> new CommentSuccessResponseDTO(c.getId(),c.getMessage(), c.getUser().getUsername(), c.getCreatedAt()))
         .collect(Collectors.toList());
 
     return ResponseEntity
-        .ok(new MemeDTO(meme.getCaption(), meme.getImage(), meme.getFunny(), meme.getSad(), meme.getErotic(),
+        .ok(new MemeDTO(meme.getId(),meme.getCaption(), meme.getImage(), meme.getFunny(), meme.getSad(), meme.getErotic(),
             meme.getScary(),
             meme.getCreatedAt(), meme.getUser().getUsername(), comments));
   }
@@ -94,8 +94,8 @@ public class MemeController {
     return ResponseEntity.ok(memeService.getByHitCountInOrderDesc());
   }
 
-  @GetMapping("memes")
-  public ResponseEntity<List<MemeGenreDTO>> memesByGenre(@RequestParam String genre){
+  @GetMapping("/genre")
+  public ResponseEntity<List<MemeGenreDTO>> memesListedByGenre(@RequestParam String genre){
     return ResponseEntity.ok(memeService.memesByGenre(genre));
   }
 }

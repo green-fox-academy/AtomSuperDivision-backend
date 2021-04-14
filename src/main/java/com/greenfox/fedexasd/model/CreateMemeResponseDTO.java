@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateMemeResponseDTO {
+  private Long id;
   private String caption;
   private Timestamp createdAt;
   private String genre;
