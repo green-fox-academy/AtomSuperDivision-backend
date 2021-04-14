@@ -1,6 +1,9 @@
 package com.greenfox.fedexasd.exception;
 
+import com.greenfox.fedexasd.model.Comment;
+import com.greenfox.fedexasd.model.CommentErrorResponseDTO;
 import com.greenfox.fedexasd.model.LoginErrorResponseDTO;
+import com.greenfox.fedexasd.model.MemeErrorResponseDTO;
 import com.greenfox.fedexasd.model.RegisterErrorResponseDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +39,18 @@ public class AppControllerAdvice {
   ResponseEntity<Object> userDoesNotExistExceptionHandler(UserDoesNotExistException e) {
     return errorResponse(
         new ResponseEntity<>(new LoginErrorResponseDTO("error", e.getMessage()), HttpStatus.UNAUTHORIZED), e);
+  }
+
+  @ExceptionHandler(MemeDoesNotExistException.class)
+  ResponseEntity<Object> memeDoesNotExistExceptionHandler(MemeDoesNotExistException e) {
+    return errorResponse(
+        new ResponseEntity<>(new MemeErrorResponseDTO(e.getMessage()), HttpStatus.BAD_REQUEST), e);
+  }
+
+  @ExceptionHandler(CommentNotExistException.class)
+  ResponseEntity<Object> commentNotExistExceptionHandler(CommentNotExistException e) {
+    return errorResponse(
+        new ResponseEntity<>(new CommentErrorResponseDTO(e.getMessage()), HttpStatus.BAD_REQUEST), e);
   }
 
   protected ResponseEntity<Object> errorResponse(ResponseEntity<Object> responseEntity, Throwable throwable) {

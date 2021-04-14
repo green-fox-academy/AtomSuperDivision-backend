@@ -46,15 +46,4 @@ public class Meme {
 
   @OneToMany(mappedBy = "meme", cascade = CascadeType.ALL)
   private List<Comment> commentList = new ArrayList<>();
-
-  public Meme(String caption, String url) {
-    Date date = new Date();
-  }
-
-  public Meme(User user, String caption, String url) {
-    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-    this.caption = caption;
-    this.url = url;
-    this.user = user;
-  }
 }
