@@ -61,4 +61,10 @@ public class AppControllerAdvice {
     }
     return responseEntity;
   }
+
+  @ExceptionHandler(MemeDoesNotExistException.class)
+  ResponseEntity<Object> invalidGenreExceptionHandler(InvalidGenreException e) {
+    return errorResponse(
+        new ResponseEntity<>((e.getMessage()), HttpStatus.BAD_REQUEST), e);
+  }
 }

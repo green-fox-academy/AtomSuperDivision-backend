@@ -13,5 +13,6 @@ import lombok.Setter;
 public class CreateMemeResponseDTO {
   private String caption;
   private Timestamp createdAt;
+  private String genre;
 
 }

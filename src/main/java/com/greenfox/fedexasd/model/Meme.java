@@ -37,6 +37,7 @@ public class Meme {
   private Long sad = 0L;
   private Long erotic = 0L;
   private Long scary = 0L;
+  private String genre;
 
   @Column(name = "hit_count")
   private Long hitCount = 0L;

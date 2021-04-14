@@ -9,8 +9,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateMemeRequestDTO {
+public class MemeGenreDTO {
   private String caption;
-  private String url;
   private String genre;
+  private String url;
+  private Long hitCount;
+  private Long funny;
+  private Long sad;
+  private Long erotic;
+  private Long scary;
 }

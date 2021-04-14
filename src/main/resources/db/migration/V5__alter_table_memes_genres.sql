@@ -1,0 +1,1 @@
+alter table memes add genre varchar(255);
