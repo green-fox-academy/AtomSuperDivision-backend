@@ -16,10 +16,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.List;
@@ -35,7 +38,7 @@ public class MemeController {
     this.memeService = memeService;
   }
 
-  @GetMapping("/memes")
+  @GetMapping("/meme")
   public ResponseEntity<Object> getAllMemes() {
     return new ResponseEntity<>(memeService.getAllMemes(), HttpStatus.OK);
   }
@@ -52,11 +55,12 @@ public class MemeController {
   }
 
   @PostMapping("/meme")
-  public ResponseEntity<Object> createMeme(@RequestBody CreateMemeRequestDTO createMemeRequestDTO,
+  public ResponseEntity<Object> createMeme(@RequestParam("file") MultipartFile file, @ModelAttribute
+      CreateMemeRequestDTO createMemeRequestDTO,
                                            Principal principal)
       throws UserDoesNotExistException {
     String username = principal.getName();
-    Meme meme = memeService.createMeme(createMemeRequestDTO, username);
+    Meme meme = memeService.createMeme(createMemeRequestDTO, username, file);
     return new ResponseEntity<>(memeService.memeToMemeResponseDTO(meme), HttpStatus.OK);
   }
 
@@ -72,7 +76,7 @@ public class MemeController {
         .collect(Collectors.toList());
 
     return ResponseEntity
-        .ok(new MemeDTO(meme.getCaption(), meme.getUrl(), meme.getFunny(), meme.getSad(), meme.getErotic(),
+        .ok(new MemeDTO(meme.getCaption(), meme.getImage(), meme.getFunny(), meme.getSad(), meme.getErotic(),
             meme.getScary(),
             meme.getCreatedAt(), meme.getUser().getUsername(), comments));
   }
