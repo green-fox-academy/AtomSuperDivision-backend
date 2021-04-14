@@ -65,7 +65,7 @@ public class MemeService {
     User user = userService.getUserByUsername(username);
     Meme meme = new Meme();
     try {
-      meme.setImage(Base64.getEncoder().encodeToString(file.getBytes()));
+      meme.setImage("data:image/png;base64," + Base64.getEncoder().encodeToString(file.getBytes()));
     } catch (IOException e) {
       e.printStackTrace();
     }
