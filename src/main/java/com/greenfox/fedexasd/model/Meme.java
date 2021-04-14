@@ -37,6 +37,9 @@ public class Meme {
   private Long erotic = 0L;
   private Long scary = 0L;
 
+  @Column(name = "hit_count")
+  private Long hitCount = 0L;
+
   @Column(name = "created_at")
   private Timestamp createdAt;
 

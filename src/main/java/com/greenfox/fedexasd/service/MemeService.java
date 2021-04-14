@@ -10,6 +10,7 @@ import com.greenfox.fedexasd.model.CreateMemeRequestDTO;
 import com.greenfox.fedexasd.model.CreateMemeResponseDTO;
 import com.greenfox.fedexasd.model.Meme;
 import com.greenfox.fedexasd.model.MemeDTO;
+import com.greenfox.fedexasd.model.MemeMinDTO;
 import com.greenfox.fedexasd.model.User;
 import com.greenfox.fedexasd.repository.CommentRepository;
 import com.greenfox.fedexasd.repository.MemeRepository;
@@ -18,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -100,5 +103,15 @@ public class MemeService {
     } else {
       throw new CommentNotExistException();
     }
+  }
+
+  public List<MemeMinDTO> getByHitCountInOrderDesc() {
+    List<Meme> orderByHitCount = memeRepository.findAll().stream()
+        .sorted(Comparator.comparing(Meme::getHitCount).reversed())
+        .collect(Collectors.toList());
+
+    return orderByHitCount.stream()
+        .map(o -> new MemeMinDTO(o.getId(), o.getCaption(), o.getUrl(), o.getHitCount()))
+        .collect(Collectors.toList());
   }
 }

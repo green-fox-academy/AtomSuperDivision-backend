@@ -8,6 +8,7 @@ import com.greenfox.fedexasd.model.CommentSuccessResponseDTO;
 import com.greenfox.fedexasd.model.CreateMemeRequestDTO;
 import com.greenfox.fedexasd.model.Meme;
 import com.greenfox.fedexasd.model.MemeDTO;
+import com.greenfox.fedexasd.model.MemeMinDTO;
 import com.greenfox.fedexasd.service.MemeService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,11 +66,10 @@ public class MemeController {
       throws MemeDoesNotExistException, UserDoesNotExistException {
 
     Meme meme = memeService.addComment(id, commentRequestDTO);
-    ModelMapper modelMapper = new ModelMapper();
 
     List<CommentSuccessResponseDTO> comments = meme.getCommentList().stream()
-        .map(c -> modelMapper.map(c, CommentSuccessResponseDTO.class)).
-            collect(Collectors.toList());
+        .map(c -> new CommentSuccessResponseDTO(c.getMessage(), c.getUser().getUsername(), c.getCreatedAt()))
+        .collect(Collectors.toList());
 
     return ResponseEntity
         .ok(new MemeDTO(meme.getCaption(), meme.getUrl(), meme.getFunny(), meme.getSad(), meme.getErotic(),
@@ -81,5 +81,10 @@ public class MemeController {
   public ResponseEntity<Void> deleteComment(@PathVariable Long id) throws CommentNotExistException {
     memeService.deleteCommentById(id);
     return ResponseEntity.noContent().build();
+  }
+
+  @GetMapping("memes/trending")
+  public ResponseEntity<List<MemeMinDTO>> getAllMemesByPopularity() {
+    return ResponseEntity.ok(memeService.getByHitCountInOrderDesc());
   }
 }
