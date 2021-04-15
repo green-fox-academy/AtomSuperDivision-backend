@@ -1,6 +1,5 @@
 package com.greenfox.fedexasd.exception;
 
-import com.greenfox.fedexasd.model.Comment;
 import com.greenfox.fedexasd.model.CommentErrorResponseDTO;
 import com.greenfox.fedexasd.model.LoginErrorResponseDTO;
 import com.greenfox.fedexasd.model.MemeErrorResponseDTO;
@@ -53,6 +52,12 @@ public class AppControllerAdvice {
         new ResponseEntity<>(new CommentErrorResponseDTO(e.getMessage()), HttpStatus.BAD_REQUEST), e);
   }
 
+  @ExceptionHandler(InvalidGenreException.class)
+  ResponseEntity<Object> invalidGenreExceptionHandler(InvalidGenreException e) {
+    return errorResponse(
+        new ResponseEntity<>((e.message()), HttpStatus.BAD_REQUEST), e);
+  }
+
   protected ResponseEntity<Object> errorResponse(ResponseEntity<Object> responseEntity, Throwable throwable) {
     if (null != throwable) {
       log.error("error caught: " + throwable.getMessage(), throwable);
@@ -62,9 +67,4 @@ public class AppControllerAdvice {
     return responseEntity;
   }
 
-  @ExceptionHandler(InvalidGenreException.class)
-  ResponseEntity<Object> invalidGenreExceptionHandler(InvalidGenreException e) {
-    return errorResponse(
-        new ResponseEntity<>((e.message()), HttpStatus.BAD_REQUEST), e);
-  }
 }
