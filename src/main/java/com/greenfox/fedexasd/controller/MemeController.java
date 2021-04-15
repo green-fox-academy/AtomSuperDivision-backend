@@ -12,7 +12,6 @@ import com.greenfox.fedexasd.model.MemeDTO;
 import com.greenfox.fedexasd.model.MemeGenreDTO;
 import com.greenfox.fedexasd.model.MemeMinDTO;
 import com.greenfox.fedexasd.service.MemeService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -74,11 +73,12 @@ public class MemeController {
     Meme meme = memeService.addComment(id, commentRequestDTO);
 
     List<CommentSuccessResponseDTO> comments = meme.getCommentList().stream()
-        .map(c -> new CommentSuccessResponseDTO(c.getId(),c.getMessage(), c.getUser().getUsername(), c.getCreatedAt()))
+        .map(c -> new CommentSuccessResponseDTO(c.getId(), c.getMessage(), c.getUser().getUsername(), c.getCreatedAt()))
         .collect(Collectors.toList());
 
     return ResponseEntity
-        .ok(new MemeDTO(meme.getId(),meme.getCaption(), meme.getImage(), meme.getFunny(), meme.getSad(), meme.getErotic(),
+        .ok(new MemeDTO(meme.getId(), meme.getCaption(), meme.getImage(), meme.getFunny(), meme.getSad(),
+            meme.getErotic(),
             meme.getScary(),
             meme.getCreatedAt(), meme.getUser().getUsername(), comments));
   }
@@ -95,7 +95,7 @@ public class MemeController {
   }
 
   @GetMapping("/genre")
-  public ResponseEntity<List<MemeGenreDTO>> memesListedByGenre(@RequestParam String genre){
+  public ResponseEntity<List<MemeGenreDTO>> memesListedByGenre(@RequestParam String genre) {
     return ResponseEntity.ok(memeService.memesByGenre(genre));
   }
 }
