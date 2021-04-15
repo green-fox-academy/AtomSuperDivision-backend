@@ -1,6 +1,5 @@
 package com.greenfox.fedexasd.model;
 
-import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,10 +9,14 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateMemeResponseDTO {
+public class MemeGenreDTO {
   private Long id;
   private String caption;
-  private Timestamp createdAt;
   private String genre;
-
+  private String url;
+  private Long hitCount;
+  private Long funny;
+  private Long sad;
+  private Long erotic;
+  private Long scary;
 }

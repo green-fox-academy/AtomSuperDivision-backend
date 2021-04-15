@@ -52,3 +52,47 @@
 ####  Responses
 * if meme creation was successful it returns
 > HTTP 200 status and sends back a JSON with meme's caption and time of creation }
+
+
+##POST /meme/{id}
+> - Header: X-meme-token
+> - Pathvariable: id 
+> - Body: {   "url":"example",
+              "caption":"hello"}
+####  Responses
+* if comment creation was successful it returns
+> HTTP 200 status and sends back a JSON with the meme and the belonging comments }
+* if a meme does not exist with the searched id it returns 
+> HTTP 400 status and sends back a message:{"No meme found with given ID"}
+
+
+##DELETE /meme/comment/{id}
+> - Header: X-meme-token
+> - Pathvariable: id 
+> - Body: {}
+####  Responses
+* if comment deletion was successful it returns
+> HTTP 200 status }
+* if a comment does not exist with the searched id it returns 
+> HTTP 400 status and sends back a message:{"No comment found with this ID"}
+
+
+##GET /memes/trending
+> - Header: X-meme-token
+> - Body: {}
+####  Responses
+* if the meme repository contains memes it returns 
+> HTTP 200 status and sends back a JSON with a list of meme objects listed by most viewed }
+* if the meme repository does not contain any memes it returns 
+> HTTP 200 status and sends back an empty list }
+
+
+##GET /genre
+> - Header: X-meme-token
+> - RequestParam: genre
+> - Body: {}
+####  Responses
+* if the meme repository contains memes it returns 
+> HTTP 200 status and sends back a JSON with a list of meme objects listed by searched genre }
+* if the meme repository does not contain any memes of searched genre it returns 
+> HTTP 200 status and sends back an empty list }

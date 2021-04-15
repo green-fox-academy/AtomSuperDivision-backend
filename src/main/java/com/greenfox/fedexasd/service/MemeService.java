@@ -1,6 +1,7 @@
 package com.greenfox.fedexasd.service;
 
 import com.greenfox.fedexasd.exception.CommentNotExistException;
+import com.greenfox.fedexasd.exception.InvalidGenreException;
 import com.greenfox.fedexasd.exception.MemeDoesNotExistException;
 import com.greenfox.fedexasd.exception.UserDoesNotExistException;
 import com.greenfox.fedexasd.model.Comment;
@@ -10,6 +11,7 @@ import com.greenfox.fedexasd.model.CreateMemeRequestDTO;
 import com.greenfox.fedexasd.model.CreateMemeResponseDTO;
 import com.greenfox.fedexasd.model.Meme;
 import com.greenfox.fedexasd.model.MemeDTO;
+import com.greenfox.fedexasd.model.MemeGenreDTO;
 import com.greenfox.fedexasd.model.MemeMinDTO;
 import com.greenfox.fedexasd.model.User;
 import com.greenfox.fedexasd.repository.CommentRepository;
@@ -43,7 +45,7 @@ public class MemeService {
   public List<MemeDTO> getAllMemes() {
     List<Meme> memes = memeRepository.findAll();
     return memes.stream().map(
-        meme -> new MemeDTO(meme.getCaption(), meme.getImage(), meme.getFunny(), meme.getSad(),
+        meme -> new MemeDTO(meme.getId(),meme.getCaption(), meme.getImage(), meme.getFunny(), meme.getSad(),
             meme.getErotic(), meme.getScary(), meme.getCreatedAt(), meme.getUser().getUsername()))
         .collect(
             Collectors.toList());
@@ -56,13 +58,14 @@ public class MemeService {
         .stream()
         .map(m -> modelMapper.map(m, CommentSuccessResponseDTO.class))
         .collect(Collectors.toList());
-    return new MemeDTO(meme.getCaption(), meme.getImage(), meme.getFunny(), meme.getSad(),
+    return new MemeDTO(meme.getId(),meme.getCaption(), meme.getImage(), meme.getFunny(), meme.getSad(),
         meme.getErotic(), meme.getScary(), meme.getCreatedAt(), meme.getUser().getUsername(), comments);
   }
 
   public Meme createMeme(CreateMemeRequestDTO createMemeRequestDTO, String username, MultipartFile file)
-      throws UserDoesNotExistException {
+      throws UserDoesNotExistException, InvalidGenreException {
     User user = userService.getUserByUsername(username);
+    validateGenre(createMemeRequestDTO.getGenre());
     Meme meme = new Meme();
     try {
       meme.setImage("data:image/png;base64," + Base64.getEncoder().encodeToString(file.getBytes()));
@@ -72,7 +75,9 @@ public class MemeService {
     meme.setCaption(createMemeRequestDTO.getCaption());
     meme.setCreatedAt(new Timestamp(System.currentTimeMillis()));
     meme.setUser(user);
+    meme.setGenre(createMemeRequestDTO.getGenre());
     return memeRepository.save(meme);
+
   }
 
   public CreateMemeResponseDTO memeToMemeResponseDTO(Meme meme) {
@@ -96,7 +101,8 @@ public class MemeService {
     User userByUsername = userService.getUserByUsername(commentRequestDTO.getUserId());
 
     meme.getCommentList()
-        .add(new Comment(commentRequestDTO.getMessage(), userByUsername, new Timestamp(System.currentTimeMillis()),
+        .add(new Comment(commentRequestDTO.getMessage(), userByUsername,
+            new Timestamp(System.currentTimeMillis()),
             meme));
     return memeRepository.save(meme);
   }
@@ -116,6 +122,26 @@ public class MemeService {
 
     return orderByHitCount.stream()
         .map(o -> new MemeMinDTO(o.getId(), o.getCaption(), o.getImage(), o.getHitCount()))
+        .collect(Collectors.toList());
+  }
+
+  public void validateGenre(String genre) throws InvalidGenreException {
+    if (genre == null || genre.equals("")) {
+      throw new InvalidGenreException();
+    }
+    genre = genre.toLowerCase();
+    if ((!genre.equals("funny")) && (!genre.equals("scary")) && (!genre.equals("erotic")) &&
+        (!genre.equals("sad"))) {
+      throw new InvalidGenreException();
+    }
+  }
+
+  public List<MemeGenreDTO> memesByGenre(String genre) {
+    List<Meme> memesBySpecificGenre = memeRepository.findAllByGenre(genre).stream()
+        .sorted(Comparator.comparing(Meme::getHitCount).reversed())
+        .collect(Collectors.toList());
+    ModelMapper mapper = new ModelMapper();
+    return memesBySpecificGenre.stream().map(meme -> mapper.map(meme, MemeGenreDTO.class))
         .collect(Collectors.toList());
   }
 }

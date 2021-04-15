@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemeDTO {
+  private Long id;
   private String caption;
   private String image;
   private Long funny = 0L;
@@ -22,8 +23,10 @@ public class MemeDTO {
   private String username;
   private List<CommentSuccessResponseDTO> comments;
 
-  public MemeDTO(String caption, String image, Long funny, Long sad, Long erotic, Long scary, Timestamp createdAt,
+  public MemeDTO(Long id, String caption, String image, Long funny, Long sad, Long erotic,
+                 Long scary, Timestamp createdAt,
                  String username) {
+    this.id = id;
     this.caption = caption;
     this.image = image;
     this.funny = funny;

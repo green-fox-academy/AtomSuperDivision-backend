@@ -61,4 +61,10 @@ public class AppControllerAdvice {
     }
     return responseEntity;
   }
+
+  @ExceptionHandler(InvalidGenreException.class)
+  ResponseEntity<Object> invalidGenreExceptionHandler(InvalidGenreException e) {
+    return errorResponse(
+        new ResponseEntity<>((e.message()), HttpStatus.BAD_REQUEST), e);
+  }
 }

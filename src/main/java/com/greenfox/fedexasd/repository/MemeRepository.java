@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MemeRepository extends JpaRepository<Meme, Long> {
+  List<Meme> findAllByGenre(String genre);
 }

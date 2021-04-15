@@ -1,6 +1,7 @@
 package com.greenfox.fedexasd.controller;
 
 import com.greenfox.fedexasd.exception.CommentNotExistException;
+import com.greenfox.fedexasd.exception.InvalidGenreException;
 import com.greenfox.fedexasd.exception.MemeDoesNotExistException;
 import com.greenfox.fedexasd.exception.UserDoesNotExistException;
 import com.greenfox.fedexasd.model.CommentRequestDTO;
@@ -8,6 +9,7 @@ import com.greenfox.fedexasd.model.CommentSuccessResponseDTO;
 import com.greenfox.fedexasd.model.CreateMemeRequestDTO;
 import com.greenfox.fedexasd.model.Meme;
 import com.greenfox.fedexasd.model.MemeDTO;
+import com.greenfox.fedexasd.model.MemeGenreDTO;
 import com.greenfox.fedexasd.model.MemeMinDTO;
 import com.greenfox.fedexasd.service.MemeService;
 import org.modelmapper.ModelMapper;
@@ -58,7 +60,7 @@ public class MemeController {
   public ResponseEntity<Object> createMeme(@RequestParam("file") MultipartFile file, @ModelAttribute
       CreateMemeRequestDTO createMemeRequestDTO,
                                            Principal principal)
-      throws UserDoesNotExistException {
+      throws UserDoesNotExistException, InvalidGenreException {
     String username = principal.getName();
     Meme meme = memeService.createMeme(createMemeRequestDTO, username, file);
     return new ResponseEntity<>(memeService.memeToMemeResponseDTO(meme), HttpStatus.OK);
@@ -72,11 +74,11 @@ public class MemeController {
     Meme meme = memeService.addComment(id, commentRequestDTO);
 
     List<CommentSuccessResponseDTO> comments = meme.getCommentList().stream()
-        .map(c -> new CommentSuccessResponseDTO(c.getMessage(), c.getUser().getUsername(), c.getCreatedAt()))
+        .map(c -> new CommentSuccessResponseDTO(c.getId(),c.getMessage(), c.getUser().getUsername(), c.getCreatedAt()))
         .collect(Collectors.toList());
 
     return ResponseEntity
-        .ok(new MemeDTO(meme.getCaption(), meme.getImage(), meme.getFunny(), meme.getSad(), meme.getErotic(),
+        .ok(new MemeDTO(meme.getId(),meme.getCaption(), meme.getImage(), meme.getFunny(), meme.getSad(), meme.getErotic(),
             meme.getScary(),
             meme.getCreatedAt(), meme.getUser().getUsername(), comments));
   }
@@ -90,5 +92,10 @@ public class MemeController {
   @GetMapping("memes/trending")
   public ResponseEntity<List<MemeMinDTO>> getAllMemesByPopularity() {
     return ResponseEntity.ok(memeService.getByHitCountInOrderDesc());
+  }
+
+  @GetMapping("/genre")
+  public ResponseEntity<List<MemeGenreDTO>> memesListedByGenre(@RequestParam String genre){
+    return ResponseEntity.ok(memeService.memesByGenre(genre));
   }
 }

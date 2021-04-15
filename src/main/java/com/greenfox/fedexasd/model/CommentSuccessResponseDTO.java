@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentSuccessResponseDTO {
+  private Long id;
   private String message;
   private String user;
   private Timestamp createdAt;

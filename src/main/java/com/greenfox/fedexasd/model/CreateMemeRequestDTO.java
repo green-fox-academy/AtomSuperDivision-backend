@@ -11,4 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CreateMemeRequestDTO {
   private String caption;
+  private String genre;
 }
